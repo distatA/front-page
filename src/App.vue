@@ -1,4 +1,5 @@
 <template>
+  <!-- 公共样式 -->
   <div id="app">
     <router-view />
   </div>
@@ -10,6 +11,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 a {
   color: inherit;
