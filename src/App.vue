@@ -3,9 +3,10 @@
     <router-view />
   </div>
 </template>
-
+@import
 <style lang="less">
 // 样式
+@import url("//at.alicdn.com/t/font_1426139_jm7n2373nlh.css");
 * {
   margin: 0;
   padding: 0;
