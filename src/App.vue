@@ -5,4 +5,5 @@
 </template>
 
 <style lang="less">
+// 样式
 </style>
