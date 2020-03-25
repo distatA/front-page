@@ -7,12 +7,16 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/Resgister")
+    component: () => import("@/views/Index")
   },
   {
     path: "/login",
     // 除了首页的页面都可以用懒加载
-    component: () => import("@/views/Login")
+    component: () => import("@/views/Login"),
+    path: "/register",
+    component: () => import("@/views/Register"),
+    path: "/index",
+    component: () => import("@/views/Index")
   }
 ];
 

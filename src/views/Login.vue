@@ -92,11 +92,12 @@ body {
     <div class="inputbox">
       <input type="text" placeholder="username/phone number" />
       <br />
+
       <input type="password" placeholder="password" />
       <div class="enter">
         <div class="btn">
           <span>
-            <a href="#">login</a>
+            <a href="#">Login</a>
           </span>
         </div>
       </div>
