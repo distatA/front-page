@@ -84,9 +84,9 @@ body {
     }
     .Mars {
       margin-top: 0.5rem;
-      span {
+      color: grey;
+      span:nth-child(2) {
         margin-left: 0.625rem;
-        color: grey;
       }
     }
   }
@@ -142,8 +142,8 @@ body {
         <div class="content_top left">
           <h3>The list of people who have designed the latest iphone model has turned out to be a trainee?</h3>
           <p class="Mars">
-            <span>火星时报</span>
-            <span>25跟帖</span>
+            <span>Mars times</span>
+            <span>1592Follows</span>
           </p>
         </div>
         <div class="content_top right">
