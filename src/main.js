@@ -4,6 +4,16 @@ import Vue from "vue";
 import App from "./App.vue";
 // 路由对象
 import router from "./router";
+// 引入vant
+import Vant from "vant";
+
+import axios from "axios";
+// 绑定到原型,加上之后就可以在组件中通过this.$axios来调用方法
+Vue.prototype.$axios = axios;
+// 封装路径
+axios.defaults.baseURL = "http://localhost:3000";
+// 注册插件
+Vue.use(Vant);
 // 上线环境是否提示信息(可以忽略)
 Vue.config.productionTip = false;
 

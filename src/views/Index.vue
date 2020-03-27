@@ -140,14 +140,20 @@ body {
     <section class="content_top">
       <div class="content_top content">
         <div class="content_top left">
-          <h3>The list of people who have designed the latest iphone model has turned out to be a trainee?</h3>
+          <h3>
+            <a
+              href="#"
+            >The list of people who have designed the latest iphone model has turned out to be a trainee?</a>
+          </h3>
           <p class="Mars">
             <span>Mars times</span>
             <span>1592Follows</span>
           </p>
         </div>
         <div class="content_top right">
-          <img src="../assets/Snipaste_2020-03-24_07-40-41.png" alt />
+          <a href="#">
+            <img src="../assets/Snipaste_2020-03-24_07-40-41.png" alt />
+          </a>
         </div>
       </div>
     </section>

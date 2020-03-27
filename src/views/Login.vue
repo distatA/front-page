@@ -1,46 +1,31 @@
-
-<style  lang="less">
+<style lang="less" scoped  >
+// 加上scoped防止组件样式冲突;
 body {
   font-family: "montserrat", sans-serif;
-}
-@banxin-width: 46.875rem;
-// 版心
-.center {
-  margin: 0 auto;
-  max-width: @banxin-width;
-  background-color: rgb(224, 224, 224);
-  height: 112.5rem;
-  background: url("../assets/302045.jpg") no-repeat center;
-  background-size: cover;
-}
+  height: 1170px;
 
-.TopEdge {
-  height: 1.875rem;
-  width: 100%;
-  background-color: rgb(117, 117, 117);
+  // background: url("../assets/302045.jpg") no-repeat center;
 }
-
+// .center {
+//   width: 35.6875rem;
+// }
 .iconfont.iconnew {
   color: #f441a5;
-  font-size: 15.625rem;
+  font-size: 11.625rem;
   position: relative;
   top: 0rem;
-  left: 16.25rem;
+  left: 8.5rem;
 }
-
 .btn {
-  // transition: all 3s linear;
+  font-size: 1.375rem;
   cursor: pointer;
-  margin: 7.625rem 4.75rem;
+  // margin: 3.625rem 2rem;
   color: white;
   text-align: center;
-  width: 37.5rem;
-  height: 3.75rem;
   border-radius: 1.875rem;
   line-height: 3.75rem;
   background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
   background-size: 400%;
-  text-transform: uppercase;
   transition: 1s;
   font-family: sans-serif;
   z-index: 1;
@@ -57,57 +42,111 @@ body {
     background-position: 100%;
   }
 }
-
 .iconfont.iconicon-test {
-  margin: 3.125rem 2.8125rem;
-  font-size: 2.5rem;
+  padding: 2.25rem;
+  font-size: 1.8rem;
+  cursor: pointer;
 }
-.inputbox {
-  text-align: center;
-  input {
-    outline: none;
-    border: none;
-    width: 31.25rem;
+.form {
+  margin-left: 1.25rem;
+  width: 100%;
+  .van-cell {
+    // padding: 2.1875rem;
+    width: 23.25rem;
     height: 3.125rem;
-    border-bottom: 3px solid rgb(173, 51, 255);
-    // color: rgb(173, 51, 255);
+    border-bottom: 1px solid purple;
+    font-size: 22px;
+    margin-left: 1.5625rem;
     color: #f441a5;
-    background-color: transparent;
-    margin-top: 1.4375rem;
-    font-size: 1.875rem;
+  }
+  .van-button--block {
+    width: 24.5rem;
+    height: 2.75rem;
+    font-size: 18px;
+    line-height: 2.75rem;
+  }
+  .van-button {
+    margin-top: 2.75rem;
+  }
+  ::-webkit-input-placeholder {
+    color: #4d9ecb;
   }
 }
-::-webkit-input-placeholder {
+.tips {
+  width: 24.5625rem;
+  height: 1.875rem;
+  margin-left: 2.1875rem;
+  margin-top: 2.5rem;
+  font-size: 1.25rem;
   color: #4d9ecb;
+  .password_left {
+    float: left;
+  }
+  .register_right {
+    float: right;
+  }
 }
 </style>
 <template>
   <div class="center">
-    <!-- 上沿灰色 -->
-    <div class="TopEdge"></div>
     <!-- ××图标 -->
     <div class="iconfont iconicon-test"></div>
     <!-- logo标签 -->
-    <h1 class="iconfont iconnew"></h1>
-    <div class="inputbox">
-      <input type="text" placeholder="username/phone number" />
-      <br />
-
-      <input type="password" placeholder="password" />
-      <div class="enter">
-        <div class="btn">
-          <span>
-            <a href="#">Login</a>
-          </span>
-        </div>
+    <div class="iconfont iconnew"></div>
+    <van-form @submit="onSubmit" class="form">
+      <van-field
+        v-model="form.username"
+        name="用户名"
+        placeholder="Username"
+        :rules="[{ required: true, message: 'Please fill in the user name' }]"
+      />
+      <van-field
+        v-model="form.password"
+        type="password"
+        name="密码"
+        placeholder="Password"
+        :rules="[{ required: true, message: 'Please enter your password ' }]"
+      />
+      <div style="margin: 16px;">
+        <van-button round block type="info" native-type="submit" class="btn">Login</van-button>
       </div>
+    </van-form>
+    <div class="tips">
+      <span class="password_left">
+        <a href="#">Forget?</a>
+      </span>
+      <span class="register_right">
+        <a href="http://localhost:8080/register">Register</a>
+      </span>
     </div>
   </div>
 </template>
- 
+
 <script>
 export default {
-  // http://localhost:8080/login
+  // http://localhost:8080/
+  data() {
+    return {
+      form: {
+        username: "",
+        password: ""
+      }
+    };
+  },
+  methods: {
+    onSubmit(values) {
+      this.$axios({
+        url: "/login",
+        method: "POST",
+        data: this.form
+      }).then(res => {
+        // this.$toast("登录成功");
+        console.log(res);
+        const { message } = res.data;
+        this.$toast.success(message);
+        this.form = "";
+      });
+    }
+  }
 };
 </script>
-
