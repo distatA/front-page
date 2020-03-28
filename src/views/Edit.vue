@@ -6,10 +6,31 @@
       <img :src="$axios.defaults.baseURL+userInfo.head_img" alt />
       <van-uploader class="uploader" :after-read="afterRead" />
     </div>
-    <listBar lable="昵称" :tips="userInfo.nickname" />
-    <listBar lable="密码" :tips="userInfo.password" />
+
+    <listBar lable="昵称" :tips="userInfo.nickname" @click.native="show=true" />
+    <van-dialog v-model="show" title="修改昵称" show-cancel-button @confirm="handleChangeNickname">
+      <van-field v-model="nickname" placeholder="请输入昵称" />
+    </van-dialog>
+
+    <listBar lable="密码" tips="******" @click.native="isShowPassword=true" />
+
+    <van-dialog
+      v-model="isShowPassword"
+      title="修改密码"
+      show-cancel-button
+      @confirm="handleChangePassword"
+    >
+      <van-field v-model="password" placeholder="请输入密码" type="password" />
+    </van-dialog>
+
     <!-- 性别判断 根据索引值去选择-->
-    <listBar lable="性别" :tips="['女','男'][userInfo.gender]" />
+    <listBar lable="性别" :tips="['女','男'][userInfo.gender]" @click.native="genderShow=true" />
+    <van-action-sheet
+      v-model="genderShow"
+      :actions="actions"
+      @select="onSelect"
+      close-on-click-action
+    />
   </div>
 </template>
 
@@ -20,10 +41,20 @@ export default {
   // /360 * 100vw
   data() {
     return {
-      // 个人详情
+      // 用户信息详情
       userInfo: {},
-      // 本地数据
-      userJson: {}
+      // 本地储存数据
+      userJson: {},
+      // 是否弹出输入框 默认是false
+      show: false,
+      isShowPassword: false,
+      genderShow: false,
+      actions: [
+        { name: "男", value: 1 },
+        { name: "女", value: 0 }
+      ],
+      nickname: "",
+      password: ""
     };
   },
   components: {
@@ -78,7 +109,45 @@ export default {
         const { url } = res.data.data;
         // 把图片地址覆盖掉原先的图片地址
         this.userInfo.head_img = url;
+        this.handleEdit({
+          head_img: url
+        });
       });
+    },
+    // 封装一个编辑本地信息的函数
+
+    handleEdit(data) {
+      this.$axios({
+        url: "/user_update/" + this.userInfo.id,
+        method: "post",
+        headers: {
+          Authorization: this.userJson.token
+        },
+        data
+      }).then(res => {
+        this.$toast.success("修改成功");
+      });
+    },
+    handleChangeNickname() {
+      this.handleEdit({
+        // 修改掉本地的昵称
+        nickname: this.nickname
+      });
+      // 把昵称同步到页面
+      this.userInfo.nickname = this.nickname;
+    },
+    // 修改面
+    handleChangePassword() {
+      this.handleEdit({
+        password: this.password
+      });
+      console.log(this.password);
+    },
+    onSelect(item) {
+      this.handleEdit({
+        gender: item.value
+      });
+      this.userInfo.gender = item.value;
     }
   }
 };
