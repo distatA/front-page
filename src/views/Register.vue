@@ -3,7 +3,8 @@
 body {
   font-family: "montserrat", sans-serif;
   height: 1170px;
-  // background: url("../assets/302045.jpg") no-repeat center;
+  // background: url("../assets/302045.jpg") no-repeat left;
+  // background: cover;
 }
 // .center {
 //   width: 35.6875rem;
@@ -38,7 +39,6 @@ body {
 .btn {
   font-size: 1.375rem;
   cursor: pointer;
-  // margin: 3.625rem 2rem;
   color: white;
   text-align: center;
   border-radius: 1.875rem;
@@ -87,9 +87,6 @@ body {
   }
   ::-webkit-input-placeholder {
     color: #4d9ecb;
-  }
-  .van-field__error-message {
-    font-size: 1.125rem;
   }
 }
 .tips {

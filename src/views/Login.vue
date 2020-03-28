@@ -1,4 +1,4 @@
-<style lang="less" scoped  >
+<style lang="less" scoped>
 // 加上scoped防止组件样式冲突;
 body {
   font-family: "montserrat", sans-serif;
@@ -108,7 +108,9 @@ body {
         :rules="[{ required: true, message: 'Please enter your password ' }]"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit" class="btn">Login</van-button>
+        <van-button round block type="info" native-type="submit" class="btn"
+          >Login</van-button
+        >
       </div>
     </van-form>
     <div class="tips">
@@ -142,9 +144,14 @@ export default {
       }).then(res => {
         // this.$toast("登录成功");
         console.log(res);
-        const { message } = res.data;
+        // 把data解构
+        const { message, data } = res.data;
         this.$toast.success(message);
-        this.form = "";
+        // this.form = "";
+        // 登录成功后把用户数据保存到本地,后面的个人中心要使用
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        this.$router.push("/Personal");
+        // http://localhost:8080/login
       });
     }
   }

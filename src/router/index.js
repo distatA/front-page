@@ -1,5 +1,5 @@
 import Vue from "vue";
-
+// 已经引入导航守卫
 import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/Login")
+    component: () => import("@/views/Edit")
   },
   {
     // 登录页
@@ -24,6 +24,16 @@ const routes = [
     // 首页
     path: "/index",
     component: () => import("@/views/Index")
+  },
+
+  {
+    // 个人中心页
+    path: "/personal",
+    component: () => import("@/views/Personal")
+  },
+  {
+    path: "/edit",
+    component: () => import("@/views/Edit")
   }
 ];
 
