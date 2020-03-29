@@ -80,6 +80,9 @@ export default {
       // 赋值给空对象userInfo,再进行回显(渲染)
       this.userInfo = data;
       // console.log(data);
+
+      // 单独保存nickname给编辑的弹窗使用
+      this.nickname = data.nickname;
     });
   },
   methods: {

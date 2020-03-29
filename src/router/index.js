@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/Edit")
+    component: () => import("@/views/EditProfile")
   },
   {
     // 登录页
@@ -34,6 +34,10 @@ const routes = [
   {
     path: "/edit",
     component: () => import("@/views/Edit")
+  },
+  {
+    path: "/editProfile",
+    component: () => import("@/views/EditProfile")
   }
 ];
 
