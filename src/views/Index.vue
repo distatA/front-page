@@ -1,6 +1,6 @@
 
 
-<style lang="less">
+<style lang="less" scoped>
 body {
   user-select: none;
 }

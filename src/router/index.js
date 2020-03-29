@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/PersonalTwo")
+    component: () => import("@/views/Collect")
   },
   {
     // 登录页
@@ -32,16 +32,29 @@ const routes = [
     component: () => import("@/views/Personal")
   },
   {
+    // 个人中心页2
     path: "/personalTwo",
     component: () => import("@/views/PersonalTwo")
   },
   {
+    // 编辑个人资料
     path: "/edit",
     component: () => import("@/views/Edit")
   },
   {
+    // 编辑个人资料2
     path: "/editProfile",
     component: () => import("@/views/EditProfile")
+  },
+  {
+    // 我的关注
+    path: "/follow",
+    component: () => import("@/views/Follow")
+  },
+  {
+    // 我的收藏
+    path: "/collect",
+    component: () => import("@/views/Collect")
   }
 ];
 
