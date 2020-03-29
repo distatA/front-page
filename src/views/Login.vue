@@ -108,9 +108,7 @@ body {
         :rules="[{ required: true, message: 'Please enter your password ' }]"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit" class="btn"
-          >Login</van-button
-        >
+        <van-button round block type="info" native-type="submit" class="btn">Login</van-button>
       </div>
     </van-form>
     <div class="tips">
@@ -150,7 +148,7 @@ export default {
         // this.form = "";
         // 登录成功后把用户数据保存到本地,后面的个人中心要使用
         localStorage.setItem("userInfo", JSON.stringify(data));
-        this.$router.push("/Personal");
+        this.$router.push("/PersonalTwo");
         // http://localhost:8080/login
       });
     }
