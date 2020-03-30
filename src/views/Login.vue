@@ -139,18 +139,25 @@ export default {
         url: "/login",
         method: "POST",
         data: this.form
-      }).then(res => {
-        // this.$toast("登录成功");
-        console.log(res);
-        // 把data解构
-        const { message, data } = res.data;
-        this.$toast.success(message);
-        // this.form = "";
-        // 登录成功后把用户数据保存到本地,后面的个人中心要使用
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        this.$router.push("/Personal");
-        // http://localhost:8080/login
-      });
+      })
+        .then(res => {
+          // this.$toast("登录成功");
+          console.log(res);
+          // 把data解构
+          const { message, data } = res.data;
+          this.$toast.success(message);
+          // this.form = "";
+          // 登录成功后把用户数据保存到本地,后面的个人中心要使用
+          localStorage.setItem("userInfo", JSON.stringify(data));
+          this.$router.push("/Personal");
+          // http://localhost:8080/login
+        })
+        .catch(res => {
+          console.log("错误拉");
+          // const { message, data } = res.data;
+          this.$toast.fail("账户或密码错误,请重新输入");
+          this.form = "";
+        });
     }
   }
 };

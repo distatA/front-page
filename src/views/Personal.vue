@@ -32,7 +32,14 @@
         </div>
       </div>
     </router-link>
-    <listBar v-for="(item, index) in rows" :key="index" :lable="item.lable" :tips="item.tips" />
+
+    <listBar
+      v-for="(item, index) in rows"
+      :key="index"
+      :lable="item.lable"
+      :tips="item.tips"
+      :path="item.path"
+    />
     <!-- @click.native在组件中使用是强行实现事件 ,,click.native这个事件类型，会给Listbar这个组件最外部的div强制绑定点击事件-->
     <listBar lable="退出" @click.native="handleClick" />
   </div>
@@ -52,15 +59,18 @@ export default {
       rows: [
         {
           lable: "我的关注",
-          tips: "关注的用户"
+          tips: "关注的用户",
+          path: "/follow"
         },
         {
           lable: "我的服帖",
-          tips: "跟帖/回复"
+          tips: "跟帖/回复",
+          path: "/comments"
         },
         {
           lable: "我的收藏",
-          tips: "文章/视频"
+          tips: "文章/视频",
+          path: "/collect"
         }
       ],
       // userInfo初始值是一个对象,接收数据的赋值

@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  props: ["title", "isShow"]
+  props: ["title", "isShow",]
 };
 </script>
 

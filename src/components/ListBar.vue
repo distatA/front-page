@@ -1,21 +1,19 @@
 <template>
-  <div class="listBar">
-    <!-- <router-link to="#"> -->
-    <div class="listBar_left" style="color:black; font-size:15">
-      {{ lable }}
+  <router-link :to="path||'#'">
+    <div class="listBar">
+      <div class="listBar_left" style="color:black; font-size:15">{{ lable }}</div>
+      <div class="listBar_right">
+        {{ tips }}
+        <span class="iconfont iconjiantou1"></span>
+      </div>
     </div>
-    <div class="listBar_right">
-      {{ tips }}
-      <span class="iconfont iconjiantou1"></span>
-    </div>
-    <!-- </router-link> -->
-  </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   // 声明的属性
-  props: ["lable", "tips"]
+  props: ["lable", "tips", "path"]
 };
 </script>
 

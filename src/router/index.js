@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/Follow")
+    component: () => import("@/views/Personal")
   },
   {
     // 登录页
@@ -55,6 +55,11 @@ const routes = [
     // 我的收藏
     path: "/collect",
     component: () => import("@/views/Collect")
+  },
+  {
+    // 我的跟帖
+    path: "/comments",
+    component: () => import("@/views/Comments")
   }
 ];
 

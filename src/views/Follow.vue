@@ -56,7 +56,7 @@ export default {
       // console.log(data);
       // 赋值给userInfo对象,用于渲染
       this.userInfo = data;
-      console.log(this.userJosn);
+      // console.log(this.userJosn);
     });
   },
   methods: {
