@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: () => import("@/views/Collect")
+    component: () => import("@/views/Follow")
   },
   {
     // 登录页

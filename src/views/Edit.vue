@@ -120,7 +120,8 @@ export default {
     // 封装一个编辑本地信息的函数
 
     handleEdit(data) {
-      this.$axios({
+      // 出现bug,请求错误也会修改信息,所以需要一个retrun返回出去
+      return this.$axios({
         url: "/user_update/" + this.userInfo.id,
         method: "post",
         headers: {
@@ -132,12 +133,15 @@ export default {
       });
     },
     handleChangeNickname() {
-      this.handleEdit({
+      // 接收返回值,如果请求成功再重新修改数据
+      const request = this.handleEdit({
         // 修改掉本地的昵称
         nickname: this.nickname
       });
-      // 把昵称同步到页面
-      this.userInfo.nickname = this.nickname;
+      request.then(res => {
+        // 把昵称同步到页面
+        this.userInfo.nickname = this.nickname;
+      });
     },
     // 修改面
     handleChangePassword() {
@@ -146,6 +150,7 @@ export default {
       });
       console.log(this.password);
     },
+    // 选中性别之后触发的方法
     onSelect(item) {
       this.handleEdit({
         gender: item.value
