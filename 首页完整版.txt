@@ -2,10 +2,12 @@
   <div class="container">
     <div class="header">
       <div class="iconfont iconnew"></div>
+      <!-- <router-link to="/search2"> -->
       <div class="search" @click="$router.push('/search')">
         <span class="iconfont iconsearch"></span>
         搜索新闻
       </div>
+      <!-- </router-link> -->
       <router-link to="/personal">
         <div class="iconfont iconwode"></div>
       </router-link>
@@ -18,23 +20,20 @@
     <van-tabs v-model="active" sticky swipeable @scroll="handelScroll">
       <van-tab
         v-for="(item, index) in categories"
-        v-if="item.is_top === 1 || item.name === `∨`"
+        v-if="item.is_top===1|| item.name===`V`"
         :key="index"
         :title="item.name"
       >
         <van-list
           :immediate-check="false"
-          v-model="item.loading"
-          :finished="item.finished "
+          v-model="categories[active].loading"
+          :finished="categories[active].finished"
           finished-text="已经到底部啦"
           @load="onLoad"
         >
           <div v-for="(v,index) in item.list" :key="index">
-            <!-- 只有单张图片的 -->
             <Postltem1 :data="v" v-if=" v.type===1 && v.cover.length <3" />
-            <!-- 大于等于3张图片 -->
             <Postltem2 :data="v" v-if=" v.type===1 && v.cover.length >=3" />
-            <!-- 视频 -->
             <Postltem3 :data="v" v-if=" v.type===2 " />
           </div>
         </van-list>
@@ -52,7 +51,6 @@ import Postltem2 from "@/components/Postltem2";
 import Postltem3 from "@/components/Postltem3";
 
 export default {
-  name: "index",
   components: {
     Postltem1,
     Postltem2,
@@ -62,6 +60,7 @@ export default {
     return {
       active: 0,
       // 本地栏目的数据
+      list: [],
       categories: [],
       token: ""
     };
@@ -74,15 +73,14 @@ export default {
       // ]如果该点击的索引等于这个数组的长度就跳转到栏目管理页面
       // 因为栏目只显示is_top=1的栏目,所以要过滤出来
       const arr = this.categories.filter(v => {
-        return v.is_top || v.name === "∨";
+        return v.is_top === 1 || v.name === "V";
       });
       if (index === arr.length - 1) {
         // console.log(1);
         this.$router.push("/Column");
       }
-      // 当栏目切换时候，需要重新的请求当前栏目的数据
+      // 切换不同栏目的时候,重新请求列表数据
       this.getList();
-      // 我们需要等待文章数据的渲染，渲染完成了之后才进行滚动
       setTimeout(() => {
         // 页面滚动到当前栏目下的scrollY值
         window.scrollTo(0, this.categories[this.active].scrollY);
@@ -90,66 +88,59 @@ export default {
     }
   },
   mounted() {
-    // 把方法封装到reload这个函数里面
-    this.load();
-  },
-  // 局部路由守卫
-  beforeRouteEnter(to, from, next) {
-    // 在当前路由改变，但是该组件被复用时调用
-    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
-    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
-    // 可以访问组件实例 `this`
-    if (from.path === "/Column") {
-      next(vm => {
-        // 通过 `vm` 访问组件实例
-        // 如果是栏目管理页跳转过来的,就让active=0
-        vm.active = 0;
-        // 如果是从栏目管理回来的，避免栏目管理的数据有更新，所以重新的初始化页面
-        vm.load();
-      });
+    // 获取本地栏目数据;
+    const categories = JSON.parse(localStorage.getItem("categories"));
+    // 获取本地token值,看看用户是否登录,判断栏目上是否有关注栏目
+    const { token } = JSON.parse(localStorage.getItem("userInfo")) || {};
+    this.token = token;
+    // 如果有栏目数据
+    if (categories) {
+      // 判断是否有关注的栏目
+      if (
+        (token && categories[0].name !== "关注") ||
+        (!token && categories[0].name === "关注")
+      ) {
+        // 然后符合条件就要重新请求获取数据
+        this.getColumn();
+      } else {
+        this.categories = categories;
+        //  给每个栏目添加属性
+        this.getcategories();
+      }
+      // this.getColumn();
     } else {
-      next();
+      // 如果没有数据重新请求获取数据
+      this.getColumn();
     }
   },
   methods: {
     onLoad() {
+      // this.categories[this.active].pageIndex += 1;
+
       this.getList();
     },
-    // 由于因为keep-alive导致的进入栏目修改完返回首页不会立即修改页面数据,所以整了下面这一出好戏
-    load() {
-      // 获取本地的栏目数据
-      const categories = JSON.parse(localStorage.getItem("categories"));
-      // 获取本地的token,如果没有值就等于一个空对象
-      const { token } = JSON.parse(localStorage.getItem("userInfo")) || {};
-      // 把token保存到data
-      this.token = token;
-      if (categories) {
-        // 如果当前是登录的状态，但是栏目的第一项居然不是“关注”，需要重新请求
-        // 如果当前未登录，但是栏目的第一项居然叫“关注”，也需要重新请求
-        if (
-        token && categories[0].name!=="关注"||!token && categories[0].name==="关注"
-        ) {
-          // 调用请求栏目的数据,并且保存到本地
-          this.getColumn();
-        } else {
-          this.categories = categories;
-          // 调用方法给每个栏目添加新属性
-          this.Addproperty();
-        }
-      } else {
-        // 调用请求栏目的数据,并且保存到本地
-        this.getColumn();
-      }
-      // this.getList();
-      console.log(this.categories);
+
+    // 给每个栏目数据都是独立的,分别添加属性
+    getcategories() {
+      this.categories = this.categories.map(i => {
+        i.pageIndex = 1; // 给每个栏目都添加了一个pageIndex属性
+        i.list = []; // 给每个栏目都拥有自己的文章列表
+        i.finished = false; // 给每个栏目都添加一个文章是否全部加载完毕的状态
+        i.loading = false; // 给每个栏目都添加是否正在请求的状态
+        i.scrollY = 0; // 给每个栏目添加一个滚动条的高度
+        i.isLoad = false; //判断栏目是否正在执行
+        return i;
+      });
+      // 不知道栏目有没有数据,所以请求文章列表数据,是一定要放到栏目处理之后执行,
+      this.getList();
     },
-    // 获取栏目
+
+    // 请求获取栏目信息
     getColumn() {
-      // 请求的配置
       const config = {
         url: "/category"
       };
-      // 如果token有值，给请求的配置加上headers
+      // 如果有token是设置请求头信息
       if (this.token) {
         config.headers = {
           Authorization: this.token
@@ -157,105 +148,73 @@ export default {
       }
       this.$axios(config).then(res => {
         console.log(res);
-        // 把栏目数据保存到data
+        // 解构出数据
         const { data } = res.data;
-        // 给数组最后添加一个跳转到栏目管理的图标
+        // 需要追加一个栏目管理
         data.push({
-          name: "∨"
+          name: "V"
         });
         this.categories = data;
-        // 保存到本地
         localStorage.setItem("categories", JSON.stringify(data));
-        // 调用方法给每个栏目添加新属性
-        this.Addproperty();
+        this.getcategories();
       });
     },
-    // 获取页面数据
     getList() {
-      // 解构出当前页面的属性
-      const {
-        pageIndex,
-        loading,
-        finished,
-        isLoad,
-        id,
-        name
-      } = this.categories[this.active];
-      // 如果正在加载的数据完毕后立即return,停止执行后面代码
-      if (isLoad) return;
-      // 正在加载数据
-      this.categories[this.active].isLoad = true;
-      // 让分页加一
-      this.categories[this.active].pageIndex += 1;
-      // 如果文章数据加载完毕立即return,停止执行后面代码
+      const { id, pageIndex, finished, name, isLoad } = this.categories[
+        this.active
+      ];
+
+      // 如果数据加载完就不再执行后面的代码
       if (finished) return;
-      // 请求文章的配置
+      //  如果正在请求,就不再执行后面代码
+      if (isLoad) return;
+      // 开始加载
+      this.categories[this.active].isLoad = true;
+
+      // 加载页面时,让各自栏目的pageIndex+1
+      this.categories[this.active].pageIndex += 1;
       const config = {
         url: "/post",
         params: {
-          pageIndex, // 每个栏目页数是不一样的
-          pageSize: 5, //  请求数据的条数
-          category: id //  请求数据的id
+          pageIndex,
+          pageSize: 4,
+          category: id
         }
       };
-      // 解构出来的name属性,如果有关注,就验证token信息
       if (name === "关注") {
-        // 如果是的话就需要加上token
         config.headers = {
           Authorization: this.token
         };
       }
       this.$axios(config).then(res => {
-        console.log(res);
-        // 解构出数据和文章总数
+        // console.log(res);
         const { data, total } = res.data;
-        // 合并到当前页面的数组里
+        // 加载的内容追加到当前数组里面
         this.categories[this.active].list = [
           ...this.categories[this.active].list,
           ...data
         ];
-        // 要用赋值方式才可立即看到数据,否则需要刷新
+        // 因为改变属性,不可驱动视图变化
         this.categories = [...this.categories];
-        // 让加载状态停止
+        //  loading事件加载完毕
         this.categories[this.active].loading = false;
-        // 判断如果文章数据全部加载完毕就停止继续加载
+        //  数据加载完毕判断
         if (this.categories[this.active].list.length === total) {
           this.categories[this.active].finished = true;
         }
-        // 手动控制的请求状态也停止
+        // 加载完毕就变成false
         this.categories[this.active].isLoad = false;
+        console.log(this.categories[this.active].list);
       });
     },
-    // 给每个栏目添加属性
-    Addproperty() {
-      this.categories = this.categories.map(v => {
-        // 给每个栏目都添加了一个pageIndex属性
-        v.pageIndex = 1;
-        // 给每个栏目都添加是否正在请求的状态
-        v.loading = false;
-        // 给每个栏目都添加一个文章是否全部加载完毕的状态
-        v.finished = false;
-        // 当前栏目是否正在请求，跟上面的loading不一样，
-        v.isLoad = false;
-        // 给每个栏目都拥有自己的文章列表
-        v.list = [];
-        // 给每个栏目添加一个滚动条的高度
-        v.scrollY = 0;
-        // 返回这个数组
-        return v;
-      });
-      // 请求文章列表数据,是一定要放到栏目处理之后执行；
-      this.getList();
-    },
-    handelScroll({ scrollTop }) {
-      console.log(scrollTop);
-      // / 因为栏目不管是从本地获取或者请求接口也好，都是需要时间，
-      // 所以需要等this.categories有值时候才设置滚动条的高度s
+    handelScroll(data) {
+      // 等页面数据加载完才可以执行代码,否则跳出
       if (this.categories.length === 0) return;
-      // scrollTop是滚动条的距离,插件自带传进的值
-      // 赋值给自定义的属性
+      const { scrollTop } = data;
+      console.log(scrollTop);
       this.categories[this.active].scrollY = scrollTop;
-      // console.log(this.categories[this.active].scrollY);
+
+      // 把浏览器回到滑动到的距离
     }
   }
 };
@@ -267,8 +226,7 @@ export default {
   .header {
     padding: 15/360 * 100vw;
     height: 45/360 * 100vw;
-    // background-color: #ff0000;
-    background: linear-gradient(90deg, #43c6ac, #191654);
+    background-color: #ff0000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -326,9 +284,6 @@ export default {
   }
   /deep/.van-tab--active {
     border-bottom: 1px solid red;
-  }
-  /deep/ .van-tabs__line{
-    background-color: transparent
   }
 }
 </style>

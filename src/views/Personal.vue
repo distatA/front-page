@@ -63,7 +63,7 @@ export default {
           path: "/follow"
         },
         {
-          lable: "我的服帖",
+          lable: "我的跟帖",
           tips: "跟帖/回复",
           path: "/comments"
         },

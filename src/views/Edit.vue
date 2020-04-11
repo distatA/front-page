@@ -4,10 +4,15 @@
     <!-- 照片 -->
     <div class="picture">
       <img :src="$axios.defaults.baseURL+userInfo.head_img" alt />
+      <!-- 添加上传的组件 -->
       <van-uploader class="uploader" :after-read="afterRead" />
     </div>
-
     <listBar lable="昵称" :tips="userInfo.nickname" @click.native="show=true" />
+    <!-- 编辑昵称的弹窗 -->
+    <!-- v-model: value和input/change两种数据的集合，
+        这里的v-model作用只要控制弹窗的显示和隐藏
+        @confirm点击确定按钮时候的事件
+    -->
     <van-dialog v-model="show" title="修改昵称" show-cancel-button @confirm="handleChangeNickname">
       <van-field v-model="nickname" placeholder="请输入昵称" />
     </van-dialog>

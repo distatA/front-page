@@ -1,48 +1,147 @@
-<style lang="less" scoped  >
-// 加上scoped防止组件样式冲突;
-body {
-  font-family: "montserrat", sans-serif;
-  height: 1170px;
-  // background: url("../assets/302045.jpg") no-repeat left;
-  // background: cover;
+<template>
+  <div class="container">
+    <!-- 返回上一页按钮 -->
+    <div class="back-btn">
+      <span class="iconfont iconicon-test" @click="$router.back()"></span>
+    </div>
+
+    <!-- logo -->
+    <div class="logo">
+      <span class="iconfont iconnew"></span>
+    </div>
+
+    <!-- 使用vant的表单 -->
+    <!-- van-form是表单的组件， @submit是表单按钮提交的事件 -->
+    <van-form @submit="onSubmit" class="form">
+      <!-- van-field是表单的字段 -->
+      <!-- rules是表单字段的规则，required表示这个输入框是必填 -->
+      <van-field
+        v-model="form.username"
+        name="手机号码"
+        placeholder="手机号码"
+        :rules="[{ required: true, message: '请填写手机号码' }]"
+      />
+      <van-field
+        v-model="form.nickname"
+        name="用户名"
+        placeholder="用户名"
+        :rules="[{ required: true, message: '请填写用户名' }]"
+      />
+      <!-- 密码输入框，和上面的属性是一样的 -->
+      <van-field
+        v-model="form.password"
+        type="password"
+        name="密码"
+        placeholder="密码"
+        :rules="[{ required: true, message: '请填写密码' }]"
+      />
+
+      <div>
+        <!-- 如果这个按钮是在van-form组件内部，
+        并且按钮的native-type="submit"，说明点击这个按钮就会触发submit事件-->
+        <van-button round block type="info" native-type="submit" class="btn">登录</van-button>
+      </div>
+    </van-form>
+    <!-- <router-link to="/register">
+      <van-button round block class="link-register">注册</van-button>
+    </router-link>-->
+    <div class="tips">
+      <span class="password_left">
+        <a href="#">忘记密码?</a>
+      </span>
+      <span class="register_right">
+        <a href="http://localhost:8080/login">已有账号</a>
+      </span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      // 保存表单数据
+      form: {
+        username: "",
+        password: "",
+        nickname: ""
+      }
+    };
+  },
+  methods: {
+    // 提交表单时候触发的事件，该事件通过校验才会触发
+    // values是表单返回的值，这里的values我们用不上，数据可以在this.form里面拿
+    onSubmit(values) {
+      // 调用axios发起异步请求，类似$.ajax(类似不代表一样)
+      this.$axios({
+        // 接口地址
+        url: "/register",
+        // 声明请求的方法为post请求(一定要注册这个method没有s)
+        // 跟vue的methods属性毫无关系
+        method: "POST",
+        // 参数
+        data: this.form
+        // .then方法里面的函数就是成功的回调函数,axios没有succces
+      }).then(res => {
+        // 获取到返回的信息
+        const { message } = res.data;
+        // 使用vant的弹窗提示用，success表示成功的弹窗
+        this.$toast.success(message);
+        this.$router.push("/login");
+      });
+    }
+  }
+};
+</script>
+<style lang="less" scoped>
+//             /360 * 100vw
+.container {
+  padding: 20/360 * 100vw;
+  .back-btn {
+    margin: 10/360 * 100vw;
+    .iconicon-test {
+      // margin: 20 /360 * 100vw 5/360 * 100vw;
+      font-size: 25 /360 * 100vw;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10/360 * 100vw;
+    .iconnew {
+      font-size: 120/360 * 100vw;
+      color: #f441a5;
+    }
+  }
 }
-// .center {
-//   width: 35.6875rem;
-// }
-// @media screen and (min-width: 750px) {
-//   html {
-//     font-size: 75px;
-//   }
-// }
-// @media screen and (min-width: 540px) and (max-width: 750px) {
-//   html {
-//     font-size: 54px;
-//   }
-// }
-// @media screen and (min-width: 480px) and (max-width: 540px) {
-//   html {
-//     font-size: 48px;
-//   }
-// }
-// @media screen and (max-width: 480px) {
-//   html {
-//     font-size: 48px;
-//   }
-// }
-.iconfont.iconnew {
-  color: #f441a5;
-  font-size: 11.625rem;
-  position: relative;
-  top: 0rem;
-  left: 8.5rem;
+.van-cell.van-field {
+  border-bottom: 1px solid #f441a5;
+  margin-bottom: 15/360 * 100vw;
+  width: 300/360 * 100vw;
+  margin-left: 10/360 * 100vw;
+  padding: 5/360 * 100vw;
+  font-size: 15/360 * 100vw;
+  color: #4d9ecb;
+}
+.van-cell {
+  color: #4d9ecb;
+}
+
+.van-button {
+  margin: 30/360 * 100vw 0;
 }
 .btn {
-  font-size: 1.375rem;
+  font-size: 15/360 * 100vw;
+  height: 45/360 * 100vw;
+  line-height: 45/360 * 100vw;
   cursor: pointer;
+  // margin: 3.625rem 2rem;
   color: white;
   text-align: center;
-  border-radius: 1.875rem;
-  line-height: 3.75rem;
+  border-radius: 30/360 * 100vw;
+  // line-height: 3.75rem;
   background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
   background-size: 400%;
   transition: 1s;
@@ -61,40 +160,11 @@ body {
     background-position: 100%;
   }
 }
-.iconfont.iconicon-test {
-  padding: 2.25rem;
-  font-size: 1.8rem;
-  cursor: pointer;
-}
-.form {
-  margin-left: 1.25rem;
-  width: 100%;
-  .van-cell {
-    width: 23.25rem;
-    height: 3.125rem;
-    border-bottom: 1px solid purple;
-    font-size: 22px;
-    margin-left: 1.5625rem;
-  }
-  .van-button--block {
-    width: 24.5rem;
-    height: 2.75rem;
-    font-size: 18px;
-    line-height: 2.75rem;
-  }
-  .van-button {
-    margin-top: 2.75rem;
-  }
-  ::-webkit-input-placeholder {
-    color: #4d9ecb;
-  }
-}
+
 .tips {
-  width: 24.5625rem;
-  height: 1.875rem;
-  margin-left: 2.1875rem;
-  margin-top: 2.5rem;
-  font-size: 1.25rem;
+  height: 20/360 * 100vw;
+  margin-top: 40/360 * 100vw;
+  font-size: 18/360 * 100vw;
   color: #4d9ecb;
   .password_left {
     float: left;
@@ -104,73 +174,3 @@ body {
   }
 }
 </style>
-<template>
-  <div class="center">
-    <!-- ××图标 -->
-    <div class="iconfont iconicon-test"></div>
-    <!-- logo标签 -->
-    <div class="iconfont iconnew"></div>
-    <van-form @submit="onSubmit" class="form">
-      <van-field
-        v-model="form.username"
-        name="用户名"
-        placeholder="Username"
-        :rules="[{ required: true, message: 'Please fill in the username' }]"
-      />
-      <van-field
-        v-model="form.nickname"
-        name="昵称"
-        placeholder="nikename"
-        :rules="[{ required: true, message: 'Please enter your nickname ' }]"
-      />
-      <van-field
-        v-model="form.password"
-        type="password"
-        name="密码"
-        placeholder="Password"
-        :rules="[{ required: true, message: 'Please enter your password ' }]"
-      />
-
-      <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit" class="btn">Register</van-button>
-      </div>
-    </van-form>
-    <div class="tips">
-      <span class="password_left">
-        <a href="#">Forget?</a>
-      </span>
-      <span class="register_right">
-        <a href="http://localhost:8080/login">Login</a>
-      </span>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        username: "",
-        nickname: "",
-        password: ""
-      }
-    };
-  },
-  methods: {
-    onSubmit(values) {
-      this.$axios({
-        url: "/register",
-        method: "POST",
-        data: this.form
-      }).then(res => {
-        // this.$toast("登录成功");
-        console.log(res);
-        const { message } = res.data;
-        this.$toast.success(message);
-        this.form = "";
-      });
-    }
-  }
-};
-</script>
