@@ -48,7 +48,7 @@ export default {
   },
   mounted() {
     // 获取本地数据渲染
-    this.categories = JSON.parse(localStorage.getItem("categories"));
+    this.categories = JSON.parse(localStorage.getItem("categories0*"));
 
     console.log(this.categories);
 

@@ -122,7 +122,6 @@ export default {
 //    /360*100vw
 
 .container {
-  background-color: #f2f2f2;
   padding-bottom: 50/360 * 100vw;
   .header {
     padding: 15/360 * 100vw;

@@ -13,7 +13,9 @@ let app;
 Vue.prototype.$axios = axios;
 // 封装路径
 // axios.defaults.baseURL = "http://localhost:3000";
-axios.defaults.baseURL = "http://192.168.16.103:3000";
+// axios.defaults.baseURL = "http://192.168.16.103:3000";
+axios.defaults.baseURL = "http://hmtoutiao-api.atlansic.com"
+
 // 注册插件
 Vue.use(Vant);
 // 上线环境是否提示信息(可以忽略)
@@ -26,15 +28,7 @@ Vue.config.productionTip = false;
 // next：必须要调用，next就类似于你nodejs的中间件，调用才会加载后面的内容
 router.beforeEach((to, from, next) => {
   // 判断是否自定义的meta属性里面需要验证的属性
-  // if (
-  //   to.path === "/personal" ||
-  //   to.path === "/edit" ||
-  //   to.path === "/follow" ||
-  //   to.path === "/collect" ||
-  //   to.path === "/comments"
-  // ) {
   // console.log(to.meta.authorization);
-
   if (to.meta.authorization) {
     // 判断是否是登录状态，时候有token
     // 如果本地的数据是空会返回null，null是没有token属性，会导致js报错，
@@ -57,11 +51,11 @@ router.beforeEach((to, from, next) => {
 
 // axios响应拦截器
 axios.interceptors.response.use(
-  (res) => {
+  res => {
     return res;
   },
   // 执行拦截错误的代码
-  (error) => {
+  error => {
     // console.log(error);
     // console.log(error.response);
     // 解构出当前错误消息和码数
@@ -85,8 +79,8 @@ axios.interceptors.response.use(
         app.$router.push({
           path: "/login",
           query: {
-            verify: app.$route.path,
-          },
+            verify: app.$route.path
+          }
         });
       }, 1000);
       console.log(app.$route.path);
@@ -100,5 +94,5 @@ app = new Vue({
   // 路由对象
   router,
   // 加载第一个子组件,最底层的组件,(写法是固定的)
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");
